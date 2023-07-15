@@ -214,22 +214,148 @@ To reverse this process, do the same thing but select your saved `arduino.hex` f
 ### Using Forward Translator Mode
 Connect a NABU keyboard to the Arduino. Connect the Arduino to a modern device over USB. Use the NABU keyboard as a USB keyboard.
 
-TBD
+Since the NABU keyboard has fewer keys than a modern keyboard, the SYM or TV/NABU key selects alternate interpretations of some of the keys. Most importantly, SYM + /? gives you the BACKSLASH/PIPE key and SYM + '" gives you the BACKQUOTE/TILDE key!
+
+Also, since the keyboard itself handles CTRL, CAPS, and SHIFT and provides no way for the receiver to tell if any of those keys are pressed, SYM + Q will press Ctrl, SYM + A will press Caps Lock, and SYM + Z will press Shift. If you enable "sticky keys," you can use these to access key combinations that would otherwise be inaccessible due to the way the NABU keyboard works. Speaking of inaccessible key combinations, the forward translator mode provides for two of the most important ones: SYM + CTRL + SHIFT + 2 will press Command + Option + Esc and SYM + CTRL + SHIFT + _ will press Ctrl + Alt + Del.
+
+![](wiki/fn.png)
+
+* SYM + ESC = Num Lock
+* SYM + Number Key = Numpad Key
+* SYM + -_ = Numpad -
+* SYM + =+ = Numpad +
+* SYM + TAB = Ins
+* SYM + Q = Ctrl
+* SYM + W, E, R, T = F1, F2, F3, F4
+* SYM + Y = Print Screen
+* SYM + U, I, O = Numpad 4, 5, 6
+* SYM + P = Numpad =
+* SYM + [ = Numpad /
+* SYM + ] = Numpad *
+* SYM + DELETE = Del
+* SYM + A = Caps Lock
+* SYM + S, D, F, G = F5, F6, F7, F8
+* SYM + H = Scroll Lock
+* SYM + J, K, L = Numpad 1, 2, 3
+* SYM + ;: = Menu
+* SYM + '" = Backquote/Tilde
+* SYM + GO = Numpad Enter
+* SYM + Z = Shift
+* SYM + X, C, V, B = F9, F10, F11, F12
+* SYM + N = Pause/Break
+* SYM + M = Numpad 0
+* SYM + , = Numpad ,
+* SYM + . = Numpad .
+* SYM + /? = Backslash/Pipe
+* SYM + Space = Shift + Space
+* SYM + Up Arrow = Page Up
+* SYM + Left Arrow = Home
+* SYM + Right Arrow = End
+* SYM + Down Arrow = Page Down
+* SYM + CTRL + SHIFT + 2 = Command + Option + Esc
+* SYM + CTRL + SHIFT + _ = Ctrl + Alt + Del
 
 ### Switch Settings
-* Digital pin 5 / switch A must be OPEN.
-* Digital pin 4 / switch B must be CLOSED.
-* TBD
+* Analog pin 0 / switch A must be OPEN.
+* Analog pin 1 / switch B must be CLOSED.
+* Analog pins 2, 3 / switches C, D select the interpretation of the SYM, PAUSE, and TV/NABU keys:
+  * OPEN, OPEN: SYM selects alternate interpretation; PAUSE = Alt, TV/NABU = Meta
+  * OPEN, CLOSED: SYM selects alternate interpretation; PAUSE = Meta, TV/NABU = Alt
+  * CLOSED, OPEN: TV/NABU selects alternate interpretation; PAUSE = Meta, SYM = Alt
+  * CLOSED, CLOSED: TV/NABU selects alternate interpretation; PAUSE = Alt, SYM = Meta
+* Analog pins 4, 5 / switches E, F select the interpretation of the YES, NO, ◁|||, and |||▷ keys:
+  * OPEN, OPEN: YES = Page Up, NO = Page Down, ◁||| = Home, |||▷ = End
+  * OPEN, CLOSED: YES = Home, NO = End, ◁||| = Page Up, |||▷ = Page Down
+  * CLOSED, OPEN: YES = `Y`, NO = `N`, ◁||| = Home, |||▷ = End
+  * CLOSED, CLOSED: YES = `|`, NO = `\`, ◁||| = Page Up, |||▷ = Page Down
 
 ## Emulator Mode
 Connect a modern device to the Arduino over USB. Connect the Arduino to the NABU keyboard port. Connect to the Arduino from the modern device over USB serial at 9600 baud (using the Arduino Serial Monitor, for example).
 
-TBD
+With analog pins 2, 3 / switches C, D both OPEN, each line of input (up to 80 characters) will be sent to the NABU as keystrokes. The first character of each line determines the interpretation of the rest of the line.
+
+* `!` - Prints the amount of free RAM on the Arduino.
+* `@` - The rest of the line is interpreted as ASCII. Key events are sent to generate each character.
+* `#` - The rest of the line is ignored.
+* `$` - The rest of the line is interpreted as a hex dump and sent as raw key event data.
+* `&` - The rest of the line is interpreted as ASCII, except for the following escape sequences:
+  * `\@` - `00 ^@` Null
+  * `\a` - `07 ^G` Bell
+  * `\b` - `08 ^H` Backspace
+  * `\t` - `09 ^I` TAB
+  * `\n` - `0A ^J` Line Feed
+  * `\v` - `0B ^K` Vertical Tab
+  * `\f` - `0C ^L` Form Feed
+  * `\r` - `0D ^M` GO
+  * `\o` - `0E ^N` Shift Out
+  * `\i` - `0F ^O` Shift In
+  * `\z` - `1A ^Z` EOF
+  * `\e` - `1B ^[` ESC
+  * `\d` - `7F` DELETE
+  * `\c`*x* - Other C0 control characters; *x* = `@`, `A`-`Z`, `[`, `\`, `]`, `^`, `_`
+  * `\x`*xx* - Raw key event in hex, e.g. `\xFF`
+  * `\`*nnn* - Raw key event in octal, e.g. `\377`
+  * `\L` - Left Arrow
+  * `\R` - Right Arrow
+  * `\U` - Up Arrow
+  * '\D' - Down Arrow
+  * '\B' - ◁|||
+  * '\F' - |||▷
+  * '\Y' - YES
+  * '\N' - NO
+  * '\P' - PAUSE
+  * '\T' - TV/NABU
+  * '\S' - Press SYM
+  * '\s' - Release SYM
+  * '\J'*n* - Joystick command; *n* = `1` or `2`
+  * '\j'*x* - Joystick data; *x* = `@`, `A`-`Z`, `[`, `\`, `]`, `^`, `_`
+  * '\E'*n* - Error code; *n* = `1`-`6`
+    * `\E1` - Multiple keys down
+    * `\E2` - Faulty keyboard RAM
+    * `\E3` - Faulty keyboard ROM
+    * `\E4` - Illegal ISR
+    * `\E5` - Watchdog (you never need to send this yourself; it is sent automatically)
+    * `\E6` - Reset (you never need to send this yourself; it is sent automatically)
+  * `\H`*x* - Start repeat; *x* = any ASCII character
+  * `\h` - End repeat
+  * `\\` - Backslash
+
+![](wiki/coded.png)
+
+With analog pin 2 / switch C OPEN and analog pin 3 / switch D CLOSED, received characters will be interpreted as ASCII. Key events will be sent to generate each character. The following control characters will press special function keys. Additionally, if the high bit is set, the SYM key will be pressed.
+
+    06  ACK  ^F  YES
+    08  BS   ^H  DELETE
+    09  HT   ^I  TAB
+    0A  LF   ^J  GO
+    0D  CR   ^M  GO
+    0E       ^N  NO
+    11  DC1  ^Q  ◁|||
+    12  DC2  ^R  |||▷
+    13  DC3  ^S  PAUSE
+    14  DC4  ^T  TV/NABU
+    15  NAK  ^U  NO
+    19       ^Y  YES
+    1B  ESC  ^[  ESC
+    1C       ^\  ←
+    1D       ^]  →
+    1E       ^^  ↑
+    1F       ^_  ↓
+    7F  DEL  ^?  DELETE
+
+With analog pin 2 / switch C CLOSED and analog pin 3 / switch D OPEN, received characters will be interpreted as a hex dump of key events as produced by Tester mode.
+
+With analog pins 2, 3 / switches C, D both CLOSED, received characters will be interpreted as raw binary key events as produced by Tester mode.
 
 ### Switch Settings
-* Digital pin 5 / switch A must be CLOSED.
-* Digital pin 4 / switch B must be OPEN.
-* TBD
+* Analog pin 0 / switch A must be CLOSED.
+* Analog pin 1 / switch B must be OPEN.
+* Analog pins 2, 3 / switches C, D select the format of the input:
+  * OPEN, OPEN: Key events are generated from debug commands.
+  * OPEN, CLOSED: Key events are generated from ASCII input.
+  * CLOSED, OPEN: Key events are input as raw hex dump.
+  * CLOSED, CLOSED: Key events are input as raw binary.
+* Analog pins 4, 5 / switches E, F have no effect.
 
 ## Reverse Translator Mode
 To use Reverse Translator Mode, you must add a USB Host Shield to the Arduino. [Sparkfun has one for sale.](https://www.sparkfun.com/products/9947) You must also add the USB Host Shield library to the Arduino IDE, found [here](https://github.com/felis/USB_Host_Shield_2.0).
@@ -238,11 +364,17 @@ If using the Sparkfun USB Host Shield, you'll need to add a wire from digital pi
 
 Connect a USB keyboard to the USB Host Shield. Connect the Arduino to the NABU keyboard port. Use the USB keyboard as the NABU's keyboard.
 
-TBD
+* YES can be accessed using F1 or Ins
+* NO can be accessed using F2 or Del
+* ◁||| can be accessed using F3, Home, or Page Up
+* |||▷ can be accessed using F4, End, or Page Down
+* PAUSE can be accessed using F11, Scroll Lock, or Pause/Break
+* TV/NABU can be accessed using F12, Print Screen, or Menu
+* SYM can be accessed using Alt or Meta
 
 ### Switch Settings
-* Digital pins 5, 4 / switches A, B must be CLOSED.
-* TBD
+* Analog pins 0, 1 / switches A, B must be CLOSED.
+* Analog pins 2, 3, 4, 5 / switches C, D, E, F have no effect.
 
 ## Acknowledgements
 
