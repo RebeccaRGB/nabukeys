@@ -372,6 +372,13 @@ Connect a USB keyboard to the USB Host Shield. Connect the Arduino to the NABU k
 * TV/NABU can be accessed using F12, Print Screen, or Menu
 * SYM can be accessed using Alt or Meta
 
+If the USB keyboard has a numeric keypad, it will work as expected. Additionally, you can now type the *forbidden characters!*
+
+    \   mostly works fine, though it displays as a box in PAINTPOT
+    |   if it works, displays as ‖ (double pipe); in NABU WRITER it triggers a restart prompt
+    `   also works fine, but displays as ▷ (right-pointing triangle)
+    ~   if it works, displays as ◁ (left-pointing triangle); in BASIC it just advances the cursor
+
 ### Switch Settings
 * Analog pins 0, 1 / switches A, B must be CLOSED.
 * Analog pins 2, 3, 4, 5 / switches C, D, E, F have no effect.
