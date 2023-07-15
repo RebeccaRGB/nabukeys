@@ -298,18 +298,18 @@ With analog pins 2, 3 / switches C, D both OPEN, each line of input (up to 80 ch
   * `\L` - Left Arrow
   * `\R` - Right Arrow
   * `\U` - Up Arrow
-  * '\D' - Down Arrow
-  * '\B' - ◁|||
-  * '\F' - |||▷
-  * '\Y' - YES
-  * '\N' - NO
-  * '\P' - PAUSE
-  * '\T' - TV/NABU
-  * '\S' - Press SYM
-  * '\s' - Release SYM
-  * '\J'*n* - Joystick command; *n* = `1` or `2`
-  * '\j'*x* - Joystick data; *x* = `@`, `A`-`Z`, `[`, `\`, `]`, `^`, `_`
-  * '\E'*n* - Error code; *n* = `1`-`6`
+  * `\D` - Down Arrow
+  * `\B` - ◁|||
+  * `\F` - |||▷
+  * `\Y` - YES
+  * `\N` - NO
+  * `\P` - PAUSE
+  * `\T` - TV/NABU
+  * `\S` - Press SYM
+  * `\s` - Release SYM
+  * `\J`*n* - Joystick command; *n* = `1` or `2`
+  * `\j`*x* - Joystick data; *x* = `@`, `A`-`Z`, `[`, `\`, `]`, `^`, `_`
+  * `\E`*n* - Error code; *n* = `1`-`6`
     * `\E1` - Multiple keys down
     * `\E2` - Faulty keyboard RAM
     * `\E3` - Faulty keyboard ROM
